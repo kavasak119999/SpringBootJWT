@@ -5,6 +5,7 @@ import dev.max.dto.Product;
 import dev.max.dto.ProductRequest;
 import dev.max.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,9 +19,13 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping("/add")
-    public void addProducts(@RequestBody ProductRequest request) {
+    public ResponseEntity<?> addProducts(@RequestBody ProductRequest request) {
         if (TABLE_NAME.equals(request.getTable()))
             productService.saveProducts(request.getRecords());
+        else {
+            return ResponseEntity.status(400).build();
+        }
+        return ResponseEntity.status(200).build();
     }
 
     @GetMapping("/all")
