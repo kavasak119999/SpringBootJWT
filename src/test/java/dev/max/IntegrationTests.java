@@ -1,20 +1,18 @@
 package dev.max;
 
+import dev.max.dto.ProductRequest;
 import dev.max.dto.Role;
 import dev.max.dto.User;
 import dev.max.dto.Product;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static io.restassured.RestAssured.given;
@@ -68,10 +66,12 @@ public class IntegrationTests {
 
         Product product = new Product(1L, "22-02-2022", 11111, "Product", 10, "Paid");
 
+        ProductRequest productRequest = new ProductRequest("products", List.of(product));
+
         given()
                 .header("Authorization", "Bearer " + jwtToken)
                 .contentType(ContentType.JSON)
-                .body(product)
+                .body(productRequest)
                 .when()
                 .post("/products/add")
                 .then()
